@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var postSchema = new mongoose.Schema({
   placeName: String,
-  location: Number,
+  location: String,
   comment: String,
   picture: String,
   time: Date
