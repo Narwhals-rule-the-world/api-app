@@ -1,28 +1,47 @@
 var express = require('express');
-var router = express.Router();
-var Post = require('../models/Posts')
+var controller = express.Router();
 var User = require('../models/Users');
+var bcrypt = require('bcrypt');
+var Salt = bcrypt.genSaltSync(10);
 
-console.log(Post)
-/* GET users listing. */
-router.get('/', function(req, res, next) {
+controller.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/test', function(req, res){
+// logout
+controller.get('/logout', function(req, res, next) {
+  req.session.user = null;
+  req.json({ 'message': 'You have been loggest out.'});
+});
 
-  Post.create({placeName: req.body.placeName}, function(err, post){
-    console.log(post)
-    res.json(post)
-  })
+// create a account
+controller.post('/signup', function(req, res, next){
+  var userInfo = {
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, Salt)
+  };
 
-})
+  User.create(userInfo, function(err, user){
+    // console.log(post)
+  res.json({ 'message': 'You have successfully registered an account!'})
+  });
+});
 
-router.get('/test', function(req, res){
-  Post.find(function(err, posts){
-    console.log(posts)
-    res.json(posts)
-  })
+controller.post('/login', function(req, res, next) {
+  var userInfo = {
+    email: req.body.email,
+    password: req.body.password
+  };
+  User.find({ email: userInfo.email }, function(err, user) {
+    var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].passwordHash);
+    if (isPasswordValid) {
+      req.session.user = user[0].email;
+      res.json({ 'message': 'Logged in successfully'});
+    } else {
+      res.json({ 'message': 'Invalid username and/or password'});
+    }
+  });
+});
 
-})
-module.exports = router;
+module.exports = controller;
