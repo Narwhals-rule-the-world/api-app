@@ -6,7 +6,13 @@ var User = require('../models/Users');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  User.find(function(err, post){
+    console.log(post)
+
+  })
+  res.json('something')
 });
+
+
 
 module.exports = router;

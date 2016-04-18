@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var postSchema = new mongoose.Schema({
+var PostSchema = new mongoose.Schema({
   placeName: String,
   location: String,
   comment: String,
@@ -8,4 +8,4 @@ var postSchema = new mongoose.Schema({
   time: Date
 });
 
-module.export = mongoose.model("Posts", postSchema)
+module.exports = mongoose.model("Post", PostSchema)
