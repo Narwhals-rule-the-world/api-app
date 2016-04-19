@@ -22,20 +22,33 @@ controller.post('/signup', function(req, res, next){
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, Salt)
   };
-  User.create(userInfo, function(err, user){
-    // console.log(post)
-  res.json({ 'message': 'You have successfully registered an account!'})
+  User.find({ /*username: userInfo.username && */ email: userInfo.email }, function(err, user) {
+    var userData = userInfo.email === user[0].email ? true : false;
+    console.log(userInfo);
+    console.log(user);
+    if (userData) {
+      User.create(userInfo, function(err, user){
+      // console.log(post)
+      res.json({ 'message': 'You have successfully registered an account!'})
   });
+    } else {
+      res.json({ 'message': 'This account already exists!'})
+    }
+  })
+
+  // User.create(userInfo, function(err, user){
+  //   // console.log(post)
+  // res.json({ 'message': 'You have successfully registered an account!'})
+  // });
 });
 
+// Login
 controller.post('/login', function(req, res, next) {
   var userInfo = {
     email: req.body.email,
     password: req.body.password
   };
   User.find({ email: userInfo.email }, function(err, user) {
-    // users[0] not the way to do this
-    console.log(user);
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
       req.session.user = user[0].email;
