@@ -5,7 +5,8 @@ var PostSchema = new mongoose.Schema({
   location: String,
   comment: String,
   picture: String,
-  time: Date
+  time: Date,
+  userName: String
 });
 
 module.exports = mongoose.model("Post", PostSchema)
