@@ -15,31 +15,27 @@ controller.get('/logout', function(req, res, next) {
   res.json({ 'message': 'You have been logged out.'});
 });
 
-// create a account
+///////////////////////////// create a account
 controller.post('/signup', function(req, res, next){
   var userInfo = {
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, Salt)
   };
-  User.find({ /*username: userInfo.username && */ email: userInfo.email }, function(err, user) {
-    var userData = userInfo.email === user[0].email ? true : false;
-    console.log(userInfo);
-    console.log(user);
-    if (userData) {
-      User.create(userInfo, function(err, user){
-      // console.log(post)
-      res.json({ 'message': 'You have successfully registered an account!'})
-  });
+  User.find({ /*username: userInfo.username,*/ email: userInfo.email }, function(err, users) {
+    console.log(users.length);
+    if (users.length >= 1) {
+      // doesDuplicateExist = true;
+      res.json({ 'message': 'This account and/or email already exists!'})
+    } else if (users.length === 0 || (users.length === 1 && users[0].username !== userInfo.username || users[0].email !== userInfo.email)) {
+      User.create(userInfo, function(err, users) {
+        res.json({ 'message': 'You have successfully registered an account!'})
+      });
     } else {
-      res.json({ 'message': 'This account already exists!'})
+      res.json({'message': 'error'})
+      // for each person in users
     }
   })
-
-  // User.create(userInfo, function(err, user){
-  //   // console.log(post)
-  // res.json({ 'message': 'You have successfully registered an account!'})
-  // });
 });
 
 // Login
@@ -61,18 +57,33 @@ controller.post('/login', function(req, res, next) {
 
 // Not sure about this????
 // Update
-controller.put('/update/:id', function(req, res) {
-  User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
-    if (err) console.log(err);
-    res.json({'message': 'Account has been updated'});
-  });
-});
-controller.patch('/update/:id', function(req, res) {
-  User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
-    if (err) console.log(err);
-    res.json({'message': 'Account has been updated'});
-  });
-});
+// controller.put('/update/:id', function(req, res) {
+//   User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
+//     if (err) console.log(err);
+//     res.json({'message': 'Account has been updated'});
+//   });
+// });
+// controller.patch('/update/:id', function(req, res) {
+//   User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
+//     if (err) console.log(err);
+//     res.json({'message': 'Account has been updated'});
+//   });
+// });
+
+// update - new =============================================================
+// controller.put('/update', function(req, res) {
+//   var userInfo = {
+//     username: req.body.username,
+//     email: req.body.email,
+//     password: bcrypt.hashSync(req.body.password, Salt)
+//   };
+//   User.findOneAndUpdate({ email: userInfo.email }, function(err, users) {
+//     users.username = userInfo.username;
+//     users.password = userInfo.password;
+//   })
+//   res.json({'message': 'Account has been updated'});
+// })
+// ============================================================================
 
 // Not sure about this????
 // Delete
