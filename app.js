@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 
 require('./db/database');
 
-var controllers = require('./controllers/index');
+var controllers = require('./controllers/posts');
 var users = require('./controllers/users');
 
 var app = express();
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('express-session')({
   secret: 'spacecats',
   resave: false,
-  saveUninitialzed: false
+  saveUninitialized: false
 }));
 
 app.use('/', controllers);
