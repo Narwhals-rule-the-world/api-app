@@ -55,34 +55,18 @@ controller.post('/login', function(req, res, next) {
   });
 });
 
-// Not sure about this????
-// Update
-// controller.put('/update/:id', function(req, res) {
-//   User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
-//     if (err) console.log(err);
-//     res.json({'message': 'Account has been updated'});
-//   });
-// });
-// controller.patch('/update/:id', function(req, res) {
-//   User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
-//     if (err) console.log(err);
-//     res.json({'message': 'Account has been updated'});
-//   });
-// });
-
 // update - new =============================================================
-// controller.put('/update', function(req, res) {
-//   var userInfo = {
-//     username: req.body.username,
-//     email: req.body.email,
-//     password: bcrypt.hashSync(req.body.password, Salt)
-//   };
-//   User.findOneAndUpdate({ email: userInfo.email }, function(err, users) {
-//     users.username = userInfo.username;
-//     users.password = userInfo.password;
-//   })
-//   res.json({'message': 'Account has been updated'});
-// })
+controller.put('/update', function(req, res) {
+  var userInfo = {
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, Salt)
+  };
+  User.findOneAndUpdate({ email: userInfo.email}, userInfo, function (err, users) {
+    if (err) console.log(err);
+    res.json({ 'message': 'Account has been updated' })
+  })
+})
 // ============================================================================
 
 // Not sure about this????
