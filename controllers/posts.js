@@ -28,7 +28,6 @@ postController.post('/search', function(req, res, next) {
       else res.json(posts);
 
   });
-  res.send('respond with a resource');
 });
 
 postController.post('/create', function(req, res){

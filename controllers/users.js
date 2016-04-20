@@ -25,12 +25,12 @@ controller.post('/signup', function(req, res, next){
   };
   User.find({ /*username: userInfo.username,*/ email: userInfo.email }, function(err, users) {
     if (users.length >= 1) {
-      res.json({ 'message': 'This account and/or email already exists!'})
+      res.json({ 'success': false })
     } else if (users.length === 0 || (users.length === 1 && users[0].username !== userInfo.username || users[0].email !== userInfo.email)) {
       User.create(userInfo, function(err, users) {
         req.session.user = userInfo.email;
         req.session.username = userInfo.username;
-        res.json({ 'message': 'You have successfully registered an account!'})
+        res.json({ 'success': true })
       });
     } else {
       res.json({'message': 'error'})
@@ -50,9 +50,9 @@ controller.post('/login', function(req, res, next) {
     if (isPasswordValid) {
       req.session.user = user[0].email;
       req.session.username = user[0].username;
-      res.json({ 'message': 'Logged in successfully'});
+      res.json({ 'success': true });
     } else {
-      res.json({ 'message': 'Invalid username and/or password'});
+      res.json({ 'success': false });
     }
   });
 });
