@@ -10,9 +10,9 @@ var User = require('../models/Users');
 // within the 'radius' parameter
 postController.post('/search', function(req, res, next) {
   var location = {
-    lat: req.body.lat,
-    lng: req.body.lng,
-    radius: 10
+    lat: parseFloat(req.body.lat),
+    lng: parseFloat(req.body.lng),
+    radius: parseFloat(req.body.radius)
   };
   console.log(location);
   // find the locations from the database
