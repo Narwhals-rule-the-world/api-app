@@ -12,9 +12,7 @@ controller.get('/', function(req, res, next) {
 // logout
 controller.get('/logout', function(req, res, next) {
   // destroy session
-        console.log(req.session.user)
   req.session.user = null;
-        console.log(req.session.user)
   res.json({ 'message': 'You have been logged out.'});
 });
 
@@ -51,10 +49,8 @@ controller.post('/login', function(req, res, next) {
   User.find({ email: userInfo.email }, function(err, user) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
-            console.log(req.session.user)
       req.session.user = user[0].email;
       // delete this after use
-      console.log(req.session.user)
       res.json({ 'message': 'Logged in successfully'});
     } else {
       res.json({ 'message': 'Invalid username and/or password'});
@@ -71,32 +67,17 @@ controller.put('/update', function(req, res) {
   };
   User.findOneAndUpdate({ email: req.session.user }, userInfo, function (err, users) {
     if (err) console.log(err);
-    console.log(userInfo.email);
-    console.log(req.session.user)
-    // fix this ======================================================
     req.session.user = userInfo.email;
-    console.log(req.session.user);
     res.json({ 'message': 'Account has been updated' })
   })
 })
 
-// Not sure about this????
-// Delete
-controller.delete('/delete/:id', function(req, res) {
-  User.findByIdAndRemove(req.params.id, req.body, function(err, user) {
+// DELETE
+controller.delete('/delete', function(req, res) {
+  User.findOneAndRemove({ email: req.session.user }, req.session, function(err, user) {
     if (err) console.log(err);
-    res.json({ 'message': 'Account has been deleted'});
-  });
-});
-
-// DELETE: work on this
-// controller.delete('/delete', function(req, res) {
-//   var userInfo = {
-//     username: req.body.username,
-//     email: req.body.email,
-//     password:
-//   }
-//   User.findOneAndRemove({ })
-// })
+    res.json({ 'message': 'Account has been deleted' })
+  })
+})
 
 module.exports = controller;
