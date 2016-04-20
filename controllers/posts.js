@@ -42,7 +42,7 @@ postController.post('/create', function(req, res){
     userName: req.session.username
   };
   Post.create(postInfo, function(err, post){
-    console.log(post);
+    res.json({post)};
     res.json({'message': 'You have successfully made a post!'});
   });
 });
