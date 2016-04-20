@@ -44,6 +44,7 @@ controller.post('/login', function(req, res, next) {
     email: req.body.email,
     password: req.body.password
   };
+  console.log(userInfo);
   User.find({ email: userInfo.email }, function(err, user) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {

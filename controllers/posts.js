@@ -12,10 +12,11 @@ postController.post('/search', function(req, res, next) {
   var location = {
     lat: req.body.lat,
     lng: req.body.lng,
-    radius: 0.002
-  }
+    radius: 10
+  };
   console.log(location);
   // find the locations from the database
+
   Post.find({ lat:
                 { $lt: location.lat + location.radius,
                   $gt: location.lat - location.radius },
