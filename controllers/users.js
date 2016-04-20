@@ -11,11 +11,14 @@ controller.get('/', function(req, res, next) {
 
 // logout
 controller.get('/logout', function(req, res, next) {
+  // destroy session
+        console.log(req.session.user)
   req.session.user = null;
+        console.log(req.session.user)
   res.json({ 'message': 'You have been logged out.'});
 });
 
-///////////////////////////// create a account
+// create a account
 controller.post('/signup', function(req, res, next){
   var userInfo = {
     username: req.body.username,
@@ -25,15 +28,16 @@ controller.post('/signup', function(req, res, next){
   User.find({ /*username: userInfo.username,*/ email: userInfo.email }, function(err, users) {
     console.log(users.length);
     if (users.length >= 1) {
-      // doesDuplicateExist = true;
       res.json({ 'message': 'This account and/or email already exists!'})
     } else if (users.length === 0 || (users.length === 1 && users[0].username !== userInfo.username || users[0].email !== userInfo.email)) {
       User.create(userInfo, function(err, users) {
+        // Look at this =====================================
+        // req.session.user = users[0].email;
+        // ==================================================
         res.json({ 'message': 'You have successfully registered an account!'})
       });
     } else {
       res.json({'message': 'error'})
-      // for each person in users
     }
   })
 });
@@ -47,7 +51,10 @@ controller.post('/login', function(req, res, next) {
   User.find({ email: userInfo.email }, function(err, user) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
+            console.log(req.session.user)
       req.session.user = user[0].email;
+      // delete this after use
+      console.log(req.session.user)
       res.json({ 'message': 'Logged in successfully'});
     } else {
       res.json({ 'message': 'Invalid username and/or password'});
@@ -55,19 +62,23 @@ controller.post('/login', function(req, res, next) {
   });
 });
 
-// update - new =============================================================
+// update
 controller.put('/update', function(req, res) {
   var userInfo = {
     username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, Salt)
   };
-  User.findOneAndUpdate({ email: userInfo.email}, userInfo, function (err, users) {
+  User.findOneAndUpdate({ email: req.session.user }, userInfo, function (err, users) {
     if (err) console.log(err);
+    console.log(userInfo.email);
+    console.log(req.session.user)
+    // fix this ======================================================
+    req.session.user = userInfo.email;
+    console.log(req.session.user);
     res.json({ 'message': 'Account has been updated' })
   })
 })
-// ============================================================================
 
 // Not sure about this????
 // Delete
@@ -77,5 +88,15 @@ controller.delete('/delete/:id', function(req, res) {
     res.json({ 'message': 'Account has been deleted'});
   });
 });
+
+// DELETE: work on this
+// controller.delete('/delete', function(req, res) {
+//   var userInfo = {
+//     username: req.body.username,
+//     email: req.body.email,
+//     password:
+//   }
+//   User.findOneAndRemove({ })
+// })
 
 module.exports = controller;
