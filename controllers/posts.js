@@ -25,7 +25,7 @@ postController.post('/search', function(req, res, next) {
                   $gt: location.lng - location.radius } },
     function(err, posts){
       if (err) console.log(err);
-      else console.log(posts);
+      else res.json(posts);
 
   });
   res.send('respond with a resource');
@@ -42,7 +42,7 @@ postController.post('/create', function(req, res){
     userName: req.session.username
   };
   Post.create(postInfo, function(err, post){
-    res.json({post)};
+    console.log(post);
     res.json({'message': 'You have successfully made a post!'});
   });
 });
