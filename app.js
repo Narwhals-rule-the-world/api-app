@@ -8,6 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
+
 require('./db/database');
 
 var controllers = require('./controllers/posts');
