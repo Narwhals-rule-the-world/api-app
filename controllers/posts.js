@@ -38,7 +38,7 @@ postController.post('/create', function(req, res){
     comment: req.body.comment,
     picture: req.body.picture,
     time: req.body.time,
-    userName: req.body.userName
+    userName: req.session.username
   };
   Post.create(postInfo, function(err, post){
     console.log(post);

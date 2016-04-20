@@ -29,6 +29,7 @@ controller.post('/signup', function(req, res, next){
     } else if (users.length === 0 || (users.length === 1 && users[0].username !== userInfo.username || users[0].email !== userInfo.email)) {
       User.create(userInfo, function(err, users) {
         req.session.user = userInfo.email;
+        req.session.username = userInfo.username;
         res.json({ 'message': 'You have successfully registered an account!'})
       });
     } else {
@@ -47,6 +48,7 @@ controller.post('/login', function(req, res, next) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
       req.session.user = user[0].email;
+      req.session.username = user[0].username;
       res.json({ 'message': 'Logged in successfully'});
     } else {
       res.json({ 'message': 'Invalid username and/or password'});
@@ -64,6 +66,7 @@ controller.put('/update', function(req, res) {
   User.findOneAndUpdate({ email: req.session.user }, userInfo, function (err, users) {
     if (err) console.log(err);
     req.session.user = userInfo.email;
+    req.session.username = userInfo.username
     res.json({ 'message': 'Account has been updated' })
   })
 })
