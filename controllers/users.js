@@ -12,7 +12,9 @@ controller.get('/', function(req, res, next) {
 // logout
 controller.get('/logout', function(req, res, next) {
   // destroy session
-  req.session.user = null;
+  console.log(req.session);
+  req.session = null;
+  console.log(req.session);
   res.json({ 'message': 'You have been logged out.'});
 });
 
@@ -48,8 +50,10 @@ controller.post('/login', function(req, res, next) {
   User.find({ email: userInfo.email }, function(err, user) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
+      console.log(req.session);
       req.session.user = user[0].email;
       req.session.username = user[0].username;
+      console.log(req.session);
       res.json({ 'success': true });
     } else {
       res.json({ 'success': false });
