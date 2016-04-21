@@ -5,23 +5,11 @@ var Post = require('../models/Posts');
 var bcrypt = require('bcrypt');
 var Salt = bcrypt.genSaltSync(10);
 
-controller.get('/', function(req, res, next) {
-  res.send('It works!');
-});
-
-controller.get('/is_logged_in', function(req, res, next){
-  console.log('from ajax');
-  console.log(req.session);
-  res.send(req.session);
-});
 
 // logout
 controller.get('/logout', function(req, res, next) {
-  console.log(req.session);
   // destroy session
-  console.log(req.session);
   req.session = null;
-  console.log(req.session);
   res.json({ 'message': 'You have been logged out.'});
 });
 
@@ -33,7 +21,7 @@ controller.post('/signup', function(req, res, next){
     password: bcrypt.hashSync(req.body.password, Salt),
     homeLocation: req.body.homeLocation
   };
-  User.find({ /*username: userInfo.username,*/ email: userInfo.email }, function(err, users) {
+  User.find({ email: userInfo.email }, function(err, users) {
     if (users.length >= 1) {
       res.json({ 'success': false })
     } else if (users.length === 0 || (users.length === 1 && users[0].username !== userInfo.username || users[0].email !== userInfo.email)) {
@@ -58,14 +46,12 @@ controller.post('/login', function(req, res, next) {
   User.find({ email: userInfo.email }, function(err, user) {
     var isPasswordValid = bcrypt.compareSync(userInfo.password, user[0].password);
     if (isPasswordValid) {
-      console.log(req.session);
       req.session.user = user[0].email;
       req.session.username = user[0].username;
       res.json({ 'success': true,
                  'username': user[0].username,
                  'homeLocation': user[0].homeLocation });
-      console.log('after login');
-      console.log(req.session);
+
     } else {
       res.json({ 'success': false });
     }
