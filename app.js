@@ -7,6 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var session = require('express-session');
 
 
 require('./db/database');
@@ -33,7 +34,7 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Sessions
-app.use(require('express-session')({
+app.use(session({
   secret: 'spacecats',
   resave: false,
   saveUninitialized: false

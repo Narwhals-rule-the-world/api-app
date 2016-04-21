@@ -9,8 +9,15 @@ controller.get('/', function(req, res, next) {
   res.send('It works!');
 });
 
+controller.get('/is_logged_in', function(req, res, next){
+  console.log('from ajax');
+  console.log(req.session);
+  res.send(req.session);
+});
+
 // logout
 controller.get('/logout', function(req, res, next) {
+  console.log(req.session);
   // destroy session
   req.session.user = null;
   res.json({ 'message': 'You have been logged out.'});
@@ -21,7 +28,8 @@ controller.post('/signup', function(req, res, next){
   var userInfo = {
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, Salt)
+    password: bcrypt.hashSync(req.body.password, Salt),
+    homeLocation: req.body.homeLocation
   };
   User.find({ /*username: userInfo.username,*/ email: userInfo.email }, function(err, users) {
     if (users.length >= 1) {
@@ -50,12 +58,17 @@ controller.post('/login', function(req, res, next) {
     if (isPasswordValid) {
       req.session.user = user[0].email;
       req.session.username = user[0].username;
-      res.json({ 'success': true });
+      res.json({ 'success': true,
+                 'username': user[0].username,
+                 'homeLocation': user[0].homeLocation });
+      console.log('after login');
+      console.log(req.session);
     } else {
       res.json({ 'success': false });
     }
   });
 });
+
 
 // update
 controller.put('/update', function(req, res) {
