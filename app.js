@@ -12,7 +12,7 @@ var session = require('express-session');
 
 require('./db/database');
 
-var controllers = require('./controllers/posts');
+var posts = require('./controllers/posts');
 var users = require('./controllers/users');
 
 var app = express();
@@ -40,7 +40,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use('/', controllers);
+app.use('/', posts);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
