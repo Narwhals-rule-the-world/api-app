@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 // this connects us to our database
-var connectionString = process.env.DB;
+var connectionString = process.env.MONGODB_URI;
 console.log('Attempting to connect to MongoDB');
 
 mongoose.connect(connectionString); // connect to the db supplied in the connectionString
